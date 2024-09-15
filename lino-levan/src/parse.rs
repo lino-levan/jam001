@@ -44,7 +44,9 @@ fn parse_tag(
                 || tag == "!doctype"
                 || tag == "meta"
                 || tag == "link"
+                || tag == "hr"
                 || tag == "br"
+                || tag == "br/" // self-closing br tag
                 || tag == "img"
                 || tag == "input"
             {
@@ -54,6 +56,7 @@ fn parse_tag(
                     children: vec![],
                 };
             }
+            println!("Opened tag: {}", tag);
             let mut children = vec![];
             loop {
                 // Handle open tags that don't have closing tags
@@ -85,6 +88,7 @@ fn parse_tag(
                 match tokens.peek() {
                     Some(HTMLToken::CloseTag { tag: closing_tag }) if closing_tag == tag => {
                         tokens.next();
+                        println!("Closed tag: {}", tag);
                         break;
                     }
                     _ => match parse_node(tokens, Some(tag.clone())) {
